@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Button, Pressable, Text, View } from "react-native";
 import TickShieldComponent from "./svgs/TickShieldComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { appendTestList } from "../features/testsSlice";
 
-export default function TestCard({
-  title,
-  testNum,
-  finalPrice,
-  price,
-  setOrderList,
-}) {
+export default function TestCard({ title, testNum, finalPrice, price }) {
   const [clicked, setClicked] = useState(false);
+  const dispatch = useDispatch();
+  const orderList = useSelector((state) => state.test.list);
+  console.log(">>> ", orderList);
 
   return (
     <View
@@ -81,23 +80,25 @@ export default function TestCard({
         <Pressable
           onPress={() => {
             setClicked(true);
-            setOrderList((res) => [
-              ...res,
-              {
+            dispatch(
+              appendTestList({
                 title: title,
                 testNum: testNum,
                 finalPrice: finalPrice,
                 price: price,
-              },
-            ]);
+              })
+            );
           }}
           style={({ pressed }) => [
             {
-              backgroundColor: clicked
-                ? "#16C2D5"
-                : pressed
-                ? "#b0b0b0"
-                : "#10217D",
+              backgroundColor:
+                orderList.length === 0
+                  ? "#10217D"
+                  : clicked
+                  ? "#16C2D5"
+                  : pressed
+                  ? "#b0b0b0"
+                  : "#10217D",
             },
             {
               marginTop: 5,
@@ -108,7 +109,7 @@ export default function TestCard({
           ]}
         >
           <Text style={{ fontSize: 12, color: "#ffffff", fontWeight: 700 }}>
-            {clicked ? "Added" : "Add"} to cart
+            {orderList.length == 0 ? "Add" : clicked ? "Added" : "Add"} to cart
           </Text>
         </Pressable>
         <Pressable

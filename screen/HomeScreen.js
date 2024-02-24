@@ -1,37 +1,49 @@
 import * as React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Cart from "../component/svgs/Cart";
 import NextArrow from "../component/svgs/NextArrow";
 import TestCard from "../component/TestCard";
 import LargeCard from "../component/LargeCard";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
-  const [orderList, setOrderList] = useState([]);
+  const orderList = useSelector((state) => state.test.list);
+  const dispatch = useDispatch();
   console.log("Result >> ", orderList);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View
+        <Pressable
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
           }}
+          onPress={() => navigation.navigate("Cart")}
         >
-          <Text
-            style={{
-              backgroundColor: "#1BA9B5",
-              borderRadius: 100,
-              padding: 2,
-              paddingHorizontal: 8,
-            }}
-          >
-            {orderList.length}
-          </Text>
+          {orderList.length > 0 && (
+            <Text
+              style={{
+                backgroundColor: "#1BA9B5",
+                borderRadius: 100,
+                padding: 2,
+                paddingHorizontal: 8,
+              }}
+            >
+              {orderList.length}
+            </Text>
+          )}
           <Cart />
-        </View>
+        </Pressable>
       ),
     });
   }, [navigation, orderList]);
@@ -92,14 +104,12 @@ export default function HomeScreen({ navigation }) {
             testNum="3"
             finalPrice="1000"
             price="1400"
-            setOrderList={setOrderList}
           />
           <TestCard
             title="Iron Study Test"
             testNum="4"
             finalPrice="600"
             price="1000"
-            setOrderList={setOrderList}
           />
         </View>
         <View
@@ -117,14 +127,12 @@ export default function HomeScreen({ navigation }) {
             testNum="4"
             finalPrice="600"
             price="1000"
-            setOrderList={setOrderList}
           />
           <TestCard
             title="Thyroid Profile"
             testNum="3"
             finalPrice="1000"
             price="1400"
-            setOrderList={setOrderList}
           />
         </View>
         <Text style={style.TitleStyle}>Popular Packages</Text>
